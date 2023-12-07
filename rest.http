@@ -1,0 +1,53 @@
+###
+GET http://localhost:8080/test/1
+
+###
+GET http://localhost:8080/test/testRequestParam?id=12
+
+###
+GET http://localhost:8080/test/testRequestBody
+content-type:application/json
+
+{
+  "id" : 123,
+  "message" : "good"
+}
+
+###
+GET http://localhost:8080/test/testResponseBody
+
+###
+GET http://localhost:8080/test/testResponseEntity
+
+###
+GET http://localhost:8080/todo/test
+
+###
+GET http://localhost:8080/todo
+
+###
+POST http://localhost:8080/todo
+content-type: application/json
+
+{
+  "title" : "post2"
+}
+
+###
+PUT http://localhost:8080/todo
+content-type: application/json
+
+{
+  "id": "402838818b568f26018b568f885b0001",
+  "title" : "title122222"
+}
+
+###
+DELETE http://localhost:8080/todo
+content-type: application/json
+
+{
+  "id": "402838818b569527018b569533810000",
+  "title": "post1",
+  "done": false
+}
