@@ -51,3 +51,32 @@ content-type: application/json
   "title": "post1",
   "done": false
 }
+
+###
+POST http://localhost:8080/auth/signup
+content-type: application/json
+
+{
+  "username": "dlstjd1149",
+  "password": "password"
+}
+
+###
+POST http://localhost:8080/auth/signin
+content-type: application/json
+
+{
+  "username": "dlstjd1149",
+  "password": "password"
+}
+
+###
+GET http://localhost:8080/todo
+Authorization: Bearer eyJ0eXAiOiJqd3QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiI0MDI4Mzg4MThjNTFiMGMzMDE4YzUxZDRiMmQwMDAwMCIsImlzcyI6ImRlbW8gYXBwIiwiaWF0IjoxNzAyMTc5OTgxLCJleHAiOjE3MDIyNjYzODF9.-tsULurMaZ89ID5YGaUbJH3zuYTZ8SRu-8ZwgUGxk11xkZpMM6I39X25ekFcjKRSvsMEjDnmnJHam4ViAJb9fQ
+
+###
+POST http://localhost:8080/todo
+Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiI0MDI4Mzg4MThjNGVjZWEwMDE4YzRlY2VjYTAwMDAwMSIsImlzcyI6ImRlbW8gYXBwIiwiaWF0IjoxNzAyMTI5Mzc2LCJleHAiOjE3MDIyMTU3NzZ9.SSnGQImnc4lR8UHx_HMMtOCELoc_ohKINMWe5jHz0iSYhq6qwo2cKQ9QhQJ3Fq0R02jeIqmjNfwqtz9Am50R3w
+Content-Type: application/json
+
+{"title":"dlstjd1149-title"}

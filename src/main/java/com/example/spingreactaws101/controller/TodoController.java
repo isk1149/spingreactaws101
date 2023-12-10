@@ -6,6 +6,7 @@ import com.example.spingreactaws101.model.TodoEntity;
 import com.example.spingreactaws101.service.TodoService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
@@ -28,20 +29,26 @@ public class TodoController {
         return ResponseEntity.ok().body(response);
     }
 
+    /**
+     * @AuthenticationPrincipal - SecurityContextHolder에서 SecurityContext::Authentication
+     * 즉, UsernamePasswordAuthenticationToken 오브젝트를 가져온다.
+     * 이 오브젝트에서 AuthenticationPrincipal을 가져와 컨트롤러 메서드에 넘겨준다
+     * JwtAuthenticationFilter클래스에서 AuthenticationPrincipal을 String형의 오브젝트로 지정했기 때문에
+     * @AuthenticationPrincipal의 형으로 String을 사용해야 한다는 걸 알 수 있다
+    */
+    
     @PostMapping
-    public ResponseEntity<?> createTodo(@RequestBody TodoDTO dto) {
+    public ResponseEntity<?> createTodo(@AuthenticationPrincipal String userId, @RequestBody TodoDTO dto) {
 
         try {
-            String temporaryUserId = "tempUserId";
-
             // (1) todoEntity로 변환
             TodoEntity entity = TodoDTO.toEntity(dto);
 
             // (2) id를 null로 초기화한다. 생성 당시에는 id가 없어야 하기 때문
             entity.setId(null);
 
-            // (3) 임시 유저 아이디 설정. 이 부분은 4장 인증과 인가에서 수정할 예정.
-            entity.setUserId(temporaryUserId);
+            //(3)Authentication Bearer Token을 통해 받은 userId를 넘긴다.
+            entity.setUserId(userId);
 
             // (4) 엔티티 생성
             List<TodoEntity> entities = service.create(entity);
@@ -63,11 +70,8 @@ public class TodoController {
     }
 
     @GetMapping
-    public ResponseEntity<?> retrieveTodoList() {
-
-        String temporaryUserId = "tempUserId";
-
-        List<TodoEntity> entities = service.retrieve(temporaryUserId);
+    public ResponseEntity<?> retrieveTodoList(@AuthenticationPrincipal String userId) {
+        List<TodoEntity> entities = service.retrieve(userId);
 
         List<TodoDTO> dtos = entities.stream().map(TodoDTO::new).collect(Collectors.toList());
 
@@ -77,12 +81,9 @@ public class TodoController {
     }
 
     @PutMapping
-    public ResponseEntity<?> updateTodo(@RequestBody TodoDTO dto) {
-
-        String temporaryUserId = "tempUserId";
-
+    public ResponseEntity<?> updateTodo(@AuthenticationPrincipal String userId, @RequestBody TodoDTO dto) {
         TodoEntity entity = TodoDTO.toEntity(dto);
-        entity.setUserId(temporaryUserId);
+        entity.setUserId(userId);
 
         List<TodoEntity> entities = service.update(entity);
         List<TodoDTO> dtos = entities.stream().map(TodoDTO::new).collect(Collectors.toList());
@@ -92,12 +93,10 @@ public class TodoController {
     }
 
     @DeleteMapping
-    public ResponseEntity<?> deleteTodo(@RequestBody TodoDTO dto) {
+    public ResponseEntity<?> deleteTodo(@AuthenticationPrincipal String userId, @RequestBody TodoDTO dto) {
         try {
-            String temporaryUserId = "tempUserId";
-
             TodoEntity entity = TodoDTO.toEntity(dto);
-            entity.setUserId(temporaryUserId);
+            entity.setUserId(userId);
 
             List<TodoEntity> entities = service.delete(entity);
             List<TodoDTO> dtos = entities.stream().map(TodoDTO::new).collect(Collectors.toList());
